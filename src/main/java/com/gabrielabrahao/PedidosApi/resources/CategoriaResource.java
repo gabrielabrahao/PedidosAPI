@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gabrielabrahao.PedidosApi.domain.Categoria;
 import com.gabrielabrahao.PedidosApi.services.CategoriaService;
 
+
+
 @RestController
 @RequestMapping(value="/categorias")
 public class CategoriaResource {

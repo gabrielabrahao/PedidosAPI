@@ -8,6 +8,7 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.ManyToAny;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -18,6 +19,7 @@ public class Categoria extends AbstractEntity<Integer>{
     @NotNull
 	private String nome;
     
+    @JsonManagedReference//Proteção para referência cíclica na serialização Json:
     @ManyToMany(mappedBy = "categorias")
     private List<Produto> produtos = new ArrayList<>(); 
 		
