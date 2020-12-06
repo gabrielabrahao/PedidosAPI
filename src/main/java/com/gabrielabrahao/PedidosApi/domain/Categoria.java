@@ -1,6 +1,12 @@
 package com.gabrielabrahao.PedidosApi.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+
+import org.hibernate.annotations.ManyToAny;
 
 import com.sun.istack.NotNull;
 
@@ -11,6 +17,11 @@ public class Categoria extends AbstractEntity<Integer>{
 	
     @NotNull
 	private String nome;
+    
+    @ManyToMany(mappedBy = "categorias")
+    private List<Produto> produtos = new ArrayList<>(); 
+		
+	
 	
 	public Categoria() {
 	
@@ -29,6 +40,14 @@ public class Categoria extends AbstractEntity<Integer>{
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
 	}
 
 	
