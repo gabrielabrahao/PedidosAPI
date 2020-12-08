@@ -7,12 +7,15 @@ import javax.persistence.Entity;
 
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Estado extends AbstractEntity<Integer> {
 	private static final long serialVersionUID = 1L;
 
 	private String nome;
 
+	@JsonBackReference
 	@OneToMany(mappedBy = "estado")
 	private List<Cidade> cidades = new ArrayList<>();
 
