@@ -31,6 +31,9 @@ public class Cliente extends AbstractEntity<Integer>{
 	@CollectionTable(name="TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 	
+	@OneToMany(mappedBy = "cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
+	
 	public Cliente() {
 		// TODO Auto-generated constructor stub
 	}
@@ -89,6 +92,14 @@ public class Cliente extends AbstractEntity<Integer>{
 
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 	
 	
