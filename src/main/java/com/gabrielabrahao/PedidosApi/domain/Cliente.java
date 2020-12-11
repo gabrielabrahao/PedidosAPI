@@ -10,8 +10,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabrielabrahao.PedidosApi.domain.enums.TipoCliente;
 
 @Entity
@@ -24,7 +23,7 @@ public class Cliente extends AbstractEntity<Integer>{
 	private String cpfouCnpj;
 	private Integer tipo;
 	
-    @JsonManagedReference//Proteção para referência cíclica na serialização Json:
+   
 	@OneToMany(mappedBy = "cliente" )
 	private List<Endereco> enderecos = new ArrayList<>();
 	
@@ -32,7 +31,7 @@ public class Cliente extends AbstractEntity<Integer>{
 	@CollectionTable(name="TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 	
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 	

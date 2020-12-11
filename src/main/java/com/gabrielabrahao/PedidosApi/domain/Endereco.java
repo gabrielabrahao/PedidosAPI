@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Endereco extends AbstractEntity<Integer>{
@@ -16,7 +16,7 @@ public class Endereco extends AbstractEntity<Integer>{
 	private String bairro;
 	private String cep;
 	
-	@JsonBackReference
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="cliente_id")
 	private Cliente cliente;
@@ -29,13 +29,16 @@ public class Endereco extends AbstractEntity<Integer>{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Endereco(String logradouro, String numero, String complemento, String bairro, String cep, Cidade cidade) {
+	public Endereco( String logradouro, String numero, String complemento, String bairro, String cep,
+			Cliente cliente, Cidade cidade) {
 		super();
+
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.complemento = complemento;
 		this.bairro = bairro;
 		this.cep = cep;
+		this.cliente = cliente;
 		this.setCidade(cidade);
 	}
 
