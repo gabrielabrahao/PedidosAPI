@@ -57,6 +57,15 @@ class PedidosApiApplicationTests {
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
 	
+	
+	@Test
+	public void TestInserirCategorias() {
+		/*
+		 * categoria cat1 = new Categoria(null, "Informática"); Categoria cat2 = new
+		 * Categoria(null, "Escritório");
+		 */
+	}
+	
 	@Test
 	public void TestInserirDados() throws ParseException {
 
