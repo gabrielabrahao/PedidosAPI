@@ -1,5 +1,7 @@
 package com.gabrielabrahao.PedidosApi.services;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +48,16 @@ public class CategoriaService {
 		
 	
 	}
+
+	public List<Categoria> findAll() {
+		
+		List<Categoria> c = repo.findAll();
+		Collections.sort();
+
+		return repo.findAll().sort(null);;
+		
+	}
+	
+	
 
 }
