@@ -39,12 +39,13 @@ public class Cliente extends AbstractEntity<Integer>{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Cliente(String nome, String email, String cpfouCnpj, TipoCliente tipo) {
+	public Cliente(Integer id,String nome, String email, String cpfouCnpj, TipoCliente tipo) {
 		super();
+		this.setId(id);
 		this.nome = nome;
 		this.email = email;
 		this.cpfouCnpj = cpfouCnpj;
-		this.tipo = tipo.getCod();
+		this.tipo = (tipo==null)? null : tipo.getCod() ;
 	}
 
 	public String getNome() {
