@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -20,6 +21,8 @@ public class Cliente extends AbstractEntity<Integer>{
 	
 	
 	private String nome;
+	
+	@Column(unique = true)
 	private String email;
 	private String cpfouCnpj;
 	private Integer tipo;
