@@ -10,10 +10,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.gabrielabrahao.PedidosApi.domain.Cidade;
 import com.gabrielabrahao.PedidosApi.domain.Cliente;
+import com.gabrielabrahao.PedidosApi.domain.Endereco;
+import com.gabrielabrahao.PedidosApi.domain.enums.TipoCliente;
 import com.gabrielabrahao.PedidosApi.dto.ClienteDTO;
+import com.gabrielabrahao.PedidosApi.dto.ClienteNewDTO;
 import com.gabrielabrahao.PedidosApi.repositories.ClienteRepository;
+import com.gabrielabrahao.PedidosApi.repositories.EnderecoRepository;
 import com.gabrielabrahao.PedidosApi.services.exceptions.DataIntegrityException;
 import com.gabrielabrahao.PedidosApi.services.exceptions.ObjectNotFoundException;
 
@@ -23,6 +29,9 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repo;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 
 	public Cliente find(Integer id)  {
 		
@@ -31,17 +40,22 @@ public class ClienteService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 	
+	@Transactional
+	public Cliente insert(Cliente obj) {
+		obj.setId(null);
+		obj = repo.save(obj);
+		enderecoRepository.saveAll(obj.getEnderecos());
+		return obj;
+	}
+	
+	
 	public Cliente update(Cliente obj) {
 		Cliente objSalvo =  find(obj.getId());
 		updateDate(objSalvo,obj);
 		return repo.save(objSalvo);
 	}
 
-	private void updateDate(Cliente objSalvo, Cliente obj) {
-		objSalvo.setNome(obj.getNome());
-		objSalvo.setEmail(obj.getEmail());
-		
-	}
+	
 
 	public void delete(Integer id) {
 		find(id);
@@ -65,10 +79,33 @@ public class ClienteService {
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy,String direction){
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage,Direction.valueOf(direction),orderBy);
 		return repo.findAll(pageRequest);
+	} 
+	
+	public Cliente fromDTO(ClienteDTO objDto) {
+		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
 	}
 
-	public Cliente  fromDTO(ClienteDTO objDto) {
-		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);		
+	public Cliente fromDTO(ClienteNewDTO objDto) {		
+		Cliente cli = new Cliente(null,objDto.getNome(), objDto.getEmail(), objDto.getCpfouCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+		Cidade  cid = new Cidade(objDto.getCidadeID(), null, null);
+		Endereco end = new Endereco(objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().add(objDto.getTelefone1());
+		if (objDto.getTelefone2()!=null) {
+			cli.getTelefones().add(objDto.getTelefone2());
+		}
+		if (objDto.getTelefone3()!=null) {
+			cli.getTelefones().add(objDto.getTelefone3());
+		}
+		return cli;
 	}
+	
+	
+	private void updateDate(Cliente objSalvo, Cliente obj) {
+		objSalvo.setNome(obj.getNome());
+		objSalvo.setEmail(obj.getEmail());
+		
+	}
+	
 
 }
