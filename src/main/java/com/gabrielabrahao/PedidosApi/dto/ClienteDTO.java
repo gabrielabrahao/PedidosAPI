@@ -7,7 +7,9 @@ import org.hibernate.validator.constraints.Length;
 
 import com.gabrielabrahao.PedidosApi.domain.AbstractEntity;
 import com.gabrielabrahao.PedidosApi.domain.Cliente;
+import com.gabrielabrahao.PedidosApi.services.validation.ClienteUpdate;
 
+@ClienteUpdate
 public class ClienteDTO extends AbstractEntity<Integer>{
 	private static final long serialVersionUID = 1L;
 	
