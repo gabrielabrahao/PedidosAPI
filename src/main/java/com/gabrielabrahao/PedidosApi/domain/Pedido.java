@@ -50,6 +50,14 @@ public class Pedido extends AbstractEntity<Integer> {
 		this.cliente = cliente;
 		this.enderecoEntrega = enderecoEntrega;
 	}
+	
+	public double getValorTotal() {
+		double soma = 0;
+		for(ItemPedido ip : itens) {
+			soma += ip.getSubTotal();
+		}
+		return soma;
+	}
 
 	public Date getInstante() {
 		return instante;
