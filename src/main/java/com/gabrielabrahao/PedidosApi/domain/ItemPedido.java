@@ -121,7 +121,7 @@ public class ItemPedido implements Serializable{
 		builder.append(", Qte:  ");
 		builder.append(getQuantidade());
 		builder.append(", Preço unitário: ");
-		builder.append(getPreco());
+		builder.append(nf.format(getPreco()));
 		builder.append(", SubTotal: ");
 		builder.append(nf.format(getSubTotal()));
 		builder.append("\n");
