@@ -17,7 +17,6 @@ import com.gabrielabrahao.PedidosApi.domain.enums.EstadoPagamento;
 import com.gabrielabrahao.PedidosApi.repositories.ItemPedidoRepository;
 import com.gabrielabrahao.PedidosApi.repositories.PagamentoRepository;
 import com.gabrielabrahao.PedidosApi.repositories.PedidoRepository;
-import com.gabrielabrahao.PedidosApi.repositories.ProdutoRepository;
 import com.gabrielabrahao.PedidosApi.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -33,11 +32,14 @@ public class PedidoService {
 	private PagamentoRepository pagamentoRepository;
 
 	@Autowired
-	private ProdutoRepository produtoRepository;
+	private ProdutoService produtoService;
 
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
-
+	
+	@Autowired
+	private ClienteService clienteService;
+	
 	public Pedido find(Integer id) {
 
 		Optional<Pedido> obj = repo.findById(id);
@@ -49,6 +51,7 @@ public class PedidoService {
 	public @Valid Pedido insert(@Valid Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(new Date());
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {
@@ -60,8 +63,9 @@ public class PedidoService {
 		pagamentoRepository.save(obj.getPagamento());
 		for (ItemPedido ip : obj.getItens()) {
 			ip.setDesconto(0.0);
-			Produto produto = produtoRepository.findById(ip.getProduto().getId()).orElse(null);
-			ip.setPreco(produto.getPreco());
+			Produto produto = produtoService.find(ip.getProduto().getId());
+			ip.setProduto(produto);
+			ip.setPreco(ip.getProduto().getPreco());
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
