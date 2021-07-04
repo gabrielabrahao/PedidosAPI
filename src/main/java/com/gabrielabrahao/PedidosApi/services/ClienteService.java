@@ -16,11 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gabrielabrahao.PedidosApi.domain.Cidade;
 import com.gabrielabrahao.PedidosApi.domain.Cliente;
 import com.gabrielabrahao.PedidosApi.domain.Endereco;
+import com.gabrielabrahao.PedidosApi.domain.enums.Perfil;
 import com.gabrielabrahao.PedidosApi.domain.enums.TipoCliente;
 import com.gabrielabrahao.PedidosApi.dto.ClienteDTO;
 import com.gabrielabrahao.PedidosApi.dto.ClienteNewDTO;
 import com.gabrielabrahao.PedidosApi.repositories.ClienteRepository;
 import com.gabrielabrahao.PedidosApi.repositories.EnderecoRepository;
+import com.gabrielabrahao.PedidosApi.security.UserSS;
+import com.gabrielabrahao.PedidosApi.services.exceptions.AuthorizationException;
 import com.gabrielabrahao.PedidosApi.services.exceptions.DataIntegrityException;
 import com.gabrielabrahao.PedidosApi.services.exceptions.ObjectNotFoundException;
 
@@ -38,7 +41,10 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 
 	public Cliente find(Integer id)  {
-		
+		UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
